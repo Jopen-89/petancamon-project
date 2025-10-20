@@ -33,14 +33,23 @@ export async function createMatch (user, body) {
     
         console.log("que pasa aqui:", data)
     
-        const datawithid = { ...data, creator: idCreator, players: [idCreator] }
+        const dataWithId = { ...data, creator: idCreator, players: [idCreator] }
 
-        console.log("aqui data withid)", datawithid)
+        console.log("aqui data withid)", dataWithId )
     
     
-        const newMatch = await Match.create(datawithid);
+        const newMatch = await Match.create(dataWithId);
+        if (!newMatch) {
+            throw new HttpError(404, "Error creating new Match")
+        }
+        console.log("aqui newMatch", newMatch)
 
-        console.log(newMatch)
+        //añadir la objectId de match en User.
+        const updateUser = await User.findByIdAndUpdate(idCreator, {$addToSet: { matches: newMatch._id}})
+        if (!updateUser) {
+            throw new HttpError(404, "Error updating matchId in User")
+        }
+
         
         return newMatch 
 

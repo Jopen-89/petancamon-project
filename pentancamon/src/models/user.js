@@ -32,10 +32,10 @@ const userSchema = new Schema({
         default: "low",
         
     },
-    comment: [
+    comments: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "ChatMessage"
+            ref: "Comments"
         }
     ],
     matches: [

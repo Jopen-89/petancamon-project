@@ -30,12 +30,13 @@ const MatchSchema = new Schema({
         required: true,
         min: 2       
     },
-    comment: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
-        }
-    ]
+    comments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Comment",
+                default: []
+            }
+        ]
     
 })
 

@@ -1,6 +1,6 @@
-import { User } from "../models/user"
-import { Match } from "../models/Match"
-import { HttpError } from "../utils/httpError"
+import { User } from "../models/user.js"
+import { Match } from "../models/Match.js"
+import { HttpError } from "../utils/httpError.js"
 
 export async function isOwner (matchId, userId) {
     const resultUser = await User.findById(userId)

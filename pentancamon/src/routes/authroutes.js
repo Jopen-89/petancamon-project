@@ -44,7 +44,7 @@ router.post("/signup", isloggedOut, async (req, res, next) => {
         
              
     } catch (err) {
-        return next(err); 
+        next(err); 
         };
     });
 
@@ -89,7 +89,7 @@ router.get('/auth/google/callback', passport.authenticate('google', {failureMess
 }
 );
 
-router.get("/logout", isLoggedIn, async (req, res, next) => {
+router.get("/logout", isLoggedIn, (req, res, next) => {
     req.logout( err => {   //cerrar la sesion  //elimina req.user
         if (err) {
             return next(new HttpError(500, "Error performing logout"));
@@ -106,10 +106,6 @@ router.get("/logout", isLoggedIn, async (req, res, next) => {
 })
 
     
-
-
-
-
 
 
 export { router as AuthRouter };

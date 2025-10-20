@@ -6,6 +6,7 @@ import { signupValidationSchema } from './src/validation/signupValidation.js';
 import { logger } from './src/utils/logger.js';
 import { AuthRouter } from './src/routes/authroutes.js';
 import { MatchRouter } from './src/routes/matchroutes.js';
+import { CommentRouter } from './src/routes/commentroutes.js';
 import { errorHandler } from './src/middlewares/errorHandler.js';
 import { sessionConfig } from './src/config/session.js';
 import passport from 'passport';
@@ -39,6 +40,7 @@ app.get("/", (req, res, next) =>
 
 app.use("/", AuthRouter )
 app.use("/", MatchRouter)
+app.use("/", CommentRouter)
 
 app.use(errorHandler)
 

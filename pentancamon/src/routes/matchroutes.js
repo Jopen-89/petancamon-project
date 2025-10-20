@@ -1,9 +1,8 @@
 import express from 'express'
 import { Router } from 'express'
-import { matchCreateValidation } from '../validation/CreateMatValidation.js'
 import { HttpError } from '../utils/httpError.js'
 import { Match } from '../models/Match.js'
-import { createMatch, deleteMatch, MatchbyId, validDataMatched } from '../services/matches.js'
+import { createMatch, deleteMatch, validDataMatched } from '../services/matches.js'
 import { isLoggedIn } from '../middlewares/loggedinout.js'
 import { User } from '../models/user.js'
 import mongoose from 'mongoose'
@@ -23,12 +22,10 @@ router.post("/createMatch", isLoggedIn, async (req, res, next) => {
     res.status(201).json({message: "Created succesfully", match: newMatch})
 
     } catch (err) {
-        if (err instanceof HttpError) {
-    
             next(err);
         }
     }
-})
+)
         
     //errores importantes: err.name, err.code
     // if (err.code === 11000) { return next(new HttpError(409, "Duplicate key error")
@@ -60,7 +57,7 @@ router.get("/matches/:matchId", isLoggedIn, async (req, res, next) => {
         res.status(200).json(match);
 
     } catch(err) {
-            next(err instanceof HttpError ? err : new HttpError(500, "Internal server error while fetching match"))
+            next(err)
         }
     })
 
@@ -82,7 +79,7 @@ router.post("/matches/:matchId/join", isLoggedIn, async (req, res, next) => {
     })
 
     } catch (err) {
-        next(err instanceof HttpError ? err : new HttpError (500, "Error joining the match"))
+        next(err)
     }
 }
 )
@@ -96,7 +93,7 @@ router.get("/matches/:matchId/delete", isLoggedIn, isOwner, async (req, res, nex
         res.status(200).json({message: "match deleted"}, {match: deletedMatch})
        
     } catch (err) {
-        next(err instanceof HttpError ? err : new HttpError (500, "Error joining the match"))
+        next(err)
     }
     } 
 )
@@ -117,7 +114,6 @@ router.post("/matches/:matchId/update", isLoggedIn, isOwner, async (req, res, ne
 
 
 
-    
     
 
 export { router as MatchRouter };
