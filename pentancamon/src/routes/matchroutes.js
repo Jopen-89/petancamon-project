@@ -9,7 +9,8 @@ import { User } from '../models/user.js'
 import mongoose from 'mongoose'
 import { matchbyId } from '../services/matches.js'
 import { joinAMatch } from '../services/matches.js'
-import { isOwner } from '../services/matches.js'
+import { isOwner } from '../middlewares/isOwner.js'
+import { updateMatch } from '../services/matches.js'
 
 const router = express.Router()
 
@@ -92,6 +93,7 @@ router.get("/matches/:matchId/delete", isLoggedIn, isOwner, async (req, res, nex
     try {
     
         const deletedMatch = await deleteMatch(req.params, req.user)
+        res.status(200).json({message: "match deleted"}, {match: deletedMatch})
        
     } catch (err) {
         next(err instanceof HttpError ? err : new HttpError (500, "Error joining the match"))
@@ -101,24 +103,21 @@ router.get("/matches/:matchId/delete", isLoggedIn, isOwner, async (req, res, nex
 
 // RUTA UPDATE A MATCH
 
-router.post("/matches/:matchId/update", isLoggedIn, isOwner, (req, res, next) => {
+router.post("/matches/:matchId/update", isLoggedIn, isOwner, async (req, res, next) => {
+    try {
 
+        const matchUpdated = updateMatch (req.params, req.body)
+        res.status(200).json({message: "Match succesfully updated"}, {match: matchUpdated})
 
+    } catch (err) {
+        next(err)
+    }
 }
-
-
 )
 
 
 
     
     
-
-
-
-
-
-
-
 
 export { router as MatchRouter };

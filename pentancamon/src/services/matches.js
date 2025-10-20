@@ -1,14 +1,15 @@
 import { z } from 'zod'
-import { matchCreateValidation } from '../validation/CreateMatValidation.js'
+import { updateorCreateMatchValidation } from '../validation/CreateMatValidation.js'
 import { HttpError } from '../utils/httpError.js'
 import { Match } from '../models/Match.js'
 import { User } from '../models/user.js'
+import { isOwner } from '../middlewares/isOwner.js'
 
 
 
 //Funcion validar info de req.body (crear partido)
 export function validDataMatched (data) {
-        const result = matchCreateValidation.safeParse(data)
+        const result = updateorCreateMatchValidation.safeParse(data)
         if (!result.success) {
             console.log(result.error.issues)
             throw new HttpError(400, 'Bad data provided')
@@ -117,26 +118,15 @@ export async function deleteMatch (dataParams, dataUser) {
 }
 
 
-//Funcion comprobar si es el owner
-
-export async function isOwner (matchId, userId) {
-    const resultUser = await User.findById(userId)
-        
-        if (!resultUser) {
-            throw new HttpError(404, "Error finding user in DB")
-        }   
-
-        const matchOwner = await Match.findById(matchId) 
-        
-            if (!matchOwner) {
-            throw new HttpError(404, "Error finding match in DB") 
-        }
-        
-        console.log("userid", userId)
-        console.log("match owner id", matchOwner.creator)
 
 
-        if (userId.String() !== matchOwner.creator.String()) {
-            throw new HttpError(403, "User logged is not the owner")
-        }
+export async function updateMatch (dataParams, dataBody) {
+    const { matchId } = dataParams;
+    const dataToUpdate = dataBody;
+
+    const dataValidToUpdate = validDataMatched (dataToUpdate)
+    
+    const matchUpdated = await Match.findByIdAndUpdate({matchId}, dataValidToUpdate, {new: true})
+    if (!matchUpdated) { throw new HttpError(404, "match not updated")}
+    return matchUpdated
 }

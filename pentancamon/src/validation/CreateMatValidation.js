@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const matchCreateValidation = z.object({
+export const updateorCreateMatchValidation = z.object({
     level: z.enum(["top", "middle", "low"]),
     location: z.string().trim().min(1, "Location is required"),
     date: z.coerce.date(), //obligar a que venga como date de JS
