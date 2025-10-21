@@ -21,6 +21,11 @@ const userSchema = new Schema({
         type: String,
         required: function () { return !this.googleId; },
     },
+    role: {
+        type: String,
+        enum:  ["admin", "user"],
+        default: "user",
+    },
     googleId: { type: String, index: true, sparse: true },
     imgUrl: {
         type: String,
